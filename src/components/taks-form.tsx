@@ -3,38 +3,47 @@
 import { TaskProps } from "@/types/task";
 import { IoMdAdd } from "react-icons/io";
 import { Button } from "./button";
+import { useForm } from "react-hook-form";
 
 interface TaskFormProps {
   setTasks: React.Dispatch<React.SetStateAction<TaskProps[]>>;
 }
 
+interface FormInputs {
+  title: string;
+  description: string;
+}
+
 export function TaskForm({ setTasks }: TaskFormProps) {
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    const form = e.target as HTMLFormElement;
-    const title = (form[0] as HTMLInputElement).value;
-    const description = (form[1] as HTMLTextAreaElement).value;
-    if (!title || !description) return;
-    const newTask = {
-      title,
-      description,
-    };
-    setTasks((prevTasks) => [...prevTasks, newTask]);
-    form.reset();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<FormInputs>();
+
+  function onSubmit(data: FormInputs) {
+    setTasks((prevTasks) => [...prevTasks, data]);
+    reset();
   }
 
   return (
     <div className="w-full bg-white shadow-md rounded-lg p-4 mb-4 h-auto">
-      <form action="" onSubmit={handleSubmit} className="flex flex-col gap-4">
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
         <h2 className="font-bold">Nova Tarefa</h2>
         <input
           type="text"
           placeholder="Título da tarefa"
           className="p-2 border-1 rounded border-gray-300"
+          {...register("title", { required: "Título é obrigatório" })}
         />
+        {errors.title && (
+          <span className="text-red-500 text-sm">{errors.title.message}</span>
+        )}
         <textarea
-          placeholder="Descição (opcional)"
+          placeholder="Descrição (opcional)"
           className="p-2 border-1 rounded border-gray-300"
+          {...register("description")}
         />
         <Button
           type="submit"
