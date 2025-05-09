@@ -1,5 +1,7 @@
 "use client";
 
+import { useTheme } from "@/context/ThemeContext";
+
 interface ButtonProps {
   onClick?: () => void;
   variants?: "primary" | "secondary" | "ghost";
@@ -19,22 +21,26 @@ export function Button({
   className,
   type,
 }: ButtonProps) {
+  const { theme } = useTheme();
+
   const baseStyles =
     "flex items-center justify-center gap-2 px-4 py-2 rounded hover:cursor-pointer";
   const variantStyles =
     variants === "primary"
-      ? "bg-[#171717] text-white hover:opacity-80"
+      ? "bg-[#171717] text-white"
       : variants === "secondary"
-      ? "bg-gray-200 text-black hover:opacity-80"
-      : "bg-transparent text-black hover:bg-gray-100";
+      ? "bg-gray-200 text-black"
+      : "bg-transparent text-black";
 
   const sizeStyles =
     size === "small" ? "text-sm" : size === "large" ? "text-lg" : "text-base";
+  const childrenStyles =
+    theme === "dark" && variants !== "secondary" ? "text-white" : "text-black";
 
   return (
     <button
-    type={type}
-      className={`${baseStyles} ${variantStyles} ${sizeStyles} ${
+      type={type}
+      className={`${baseStyles} ${variantStyles} ${sizeStyles} ${childrenStyles} hover:opacity-80 ${
         className || ""
       }`}
       onClick={onClick}

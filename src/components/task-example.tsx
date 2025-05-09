@@ -3,6 +3,7 @@
 import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
 import { Button } from "./button";
 import { TaskProps } from "@/types/task";
+import { useTheme } from "@/context/ThemeContext";
 
 interface TaskExampleProps {
   title: string;
@@ -17,12 +18,19 @@ export function TaskExample({
   tasks,
   setTasks,
 }: TaskExampleProps) {
+  const { theme } = useTheme();
+
   function handleRemoveTask() {
     setTasks(tasks.filter((task) => task.title != title));
   }
 
   return (
-    <div className="max-w-[400px] bg-white shadow-md rounded-lg p-4 mb-4 h-40 w-[400px]">
+    <div
+      className={
+        (theme === "dark" ? "bg-black/80" : "bg-white") +
+        " max-w-[400px] shadow-md rounded-lg p-4 mb-4 h-40 w-[400px]"
+      }
+    >
       <div className="flex items-center justify-between p-4">
         <div className="flex flex-rown items-center gap-2">
           <input type="checkbox" className="border-1 rounded border-gray-300" />
