@@ -7,18 +7,19 @@ import { TaskForm } from "@/components/taks-form";
 import { TaskExample } from "@/components/task-example";
 import { useAuth } from "@/context/AuthContext";
 import { TaskProps } from "@/types/task";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Home() {
   const { user } = useAuth();
+  const [renderTasks, setRenderTasks] = useState<TaskProps[]>([]);
+  const [tasks, setTasks] = useState<TaskProps[]>([]);
 
-  const [tasks, setTasks] = useState<TaskProps[]>([
-    {
-      title: "Examplo da Tarefa",
-      description:
-        "Esta é uma tarefa de exemplo. Você pode marcar como concluída, editar ou excluir",
-    },
-  ]);
+  useEffect(() => {
+    const storedTasks = localStorage.getItem("tasks");
+    if (storedTasks) {
+      setRenderTasks(JSON.parse(storedTasks));
+    }
+  }, [tasks]);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4 gap-4">
@@ -26,7 +27,7 @@ export default function Home() {
         {user.name ? (
           <>
             <Header />
-            <Dashboard user={user} tasks={tasks} setTasks={setTasks} />
+            <Dashboard user={user} tasks={renderTasks} setTasks={setTasks} />
           </>
         ) : (
           <LoginForm />

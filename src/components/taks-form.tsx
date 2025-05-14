@@ -27,6 +27,10 @@ export function TaskForm({ setTasks }: TaskFormProps) {
 
   function onSubmit(data: FormInputs) {
     setTasks((prevTasks) => [...prevTasks, data]);
+    localStorage.setItem(
+      "tasks",
+      JSON.stringify([...JSON.parse(localStorage.getItem("tasks") || "[]"), data])
+    );
     reset();
   }
 

@@ -21,7 +21,9 @@ export function TaskExample({
   const { theme } = useTheme();
 
   function handleRemoveTask() {
-    setTasks(tasks.filter((task) => task.title != title));
+    const updatedTasks = tasks.filter((task) => task.title != title)
+    localStorage.setItem("tasks", JSON.stringify(updatedTasks));
+    setTasks(updatedTasks);
   }
 
   return (
